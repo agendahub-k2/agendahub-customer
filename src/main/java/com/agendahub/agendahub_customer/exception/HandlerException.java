@@ -1,0 +1,97 @@
+package com.agendahub.agendahub_customer.exception;
+
+import com.agendahub.agendahub_customer.controller.CustomerController;
+import com.agendahub.agendahub_customer.controller.dto.ErrorResponse;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@ControllerAdvice
+public class HandlerException {
+
+    private static final Logger logger = LoggerFactory.getLogger(HandlerException.class);
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<ErrorResponse.ValidationError> errors = ex.getBindingResult().getAllErrors().stream()
+                .map(error -> {
+                    String fieldName = ((FieldError) error).getField();
+                    String errorMessage = error.getDefaultMessage();
+                    return new ErrorResponse.ValidationError(fieldName, errorMessage);
+                })
+                .collect(Collectors.toList());
+
+        ErrorResponse errorResponse = new ErrorResponse("Validation failed", errors);
+        logger.info("statusCode {} {} ", HttpStatus.BAD_REQUEST, errorResponse);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> illegalArgumentException(IllegalArgumentException ex) {
+        ErrorResponse.ValidationError error = new ErrorResponse.ValidationError("", "");
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), List.of(error));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse> exception(Exception ex) {
+        ErrorResponse.ValidationError error = new ErrorResponse.ValidationError("", "");
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), List.of(error));
+        logger.error("Error {}{} ", HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<String> unauthorizedException(UnauthorizedException ex) {
+        logger.info("status code{} {}", HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<String> tokenExpiredException(TokenExpiredException ex) {
+        logger.info("status code{}{}", HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+
+        String errorMessage = "Database integrity violation occurred";
+
+        Throwable rootCause = ex.getRootCause();
+        while (rootCause != null) {
+            if (rootCause instanceof SQLIntegrityConstraintViolationException) {
+                errorMessage = rootCause.getMessage();
+                break;
+            }
+            rootCause = rootCause.getCause();
+        }
+
+        ErrorResponse.ValidationError error = new ErrorResponse.ValidationError("", errorMessage);
+        ErrorResponse errorResponse = new ErrorResponse(error.getError(), Collections.emptyList());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+}

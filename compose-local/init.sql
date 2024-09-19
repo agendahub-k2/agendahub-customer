@@ -1,0 +1,24 @@
+---- Tabela de usuários, agora com suporte a multi-tenancy
+--CREATE TABLE users (
+--    id VARCHAR(36) AUTO_INCREMENT PRIMARY KEY not null,
+--    tenant_id INT NOT NULL, -- Identificador do inquilino
+--    name VARCHAR(100) NOT NULL,
+--    email VARCHAR(100) NOT NULL UNIQUE,
+--    password VARCHAR(255) NOT NULL,
+--    user_type ENUM('solicitante', 'provedor') NOT NULL,
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--    -- Adicione um índice para melhorar a consulta por inquilino
+--    INDEX (tenant_id)
+--);
+--
+---- Tabela de serviços, com identificação do inquilino
+--CREATE TABLE services (
+--    id INT AUTO_INCREMENT PRIMARY KEY,
+--    tenant_id INT NOT NULL, -- Identificador do inquilino
+--    provider_id INT, -- FK para usuários (provedores)
+--    service_name VARCHAR(255) NOT NULL,
+--    service_description TEXT,
+--    FOREIGN KEY (provider_id) REFERENCES users(id),
+--    -- Adicione um índice para melhorar a consulta por inquilino
+--    INDEX (tenant_id)
+--);
