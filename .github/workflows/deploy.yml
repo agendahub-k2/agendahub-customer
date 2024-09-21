@@ -23,10 +23,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Print environment variables
+        run: |
+          echo "AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}"
+          echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
+          echo "ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}"
+
       - name: Build and push Docker image
         run: |
           docker build -t agendahub_customer .
-          echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" | docker login -u AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           docker tag agendahub_customer:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
 
