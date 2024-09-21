@@ -5,8 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
-import java.util.Date;
-
 public class JwtUtil {
 
     private static final String SECRET_KEY = "hJk1PmS7n78XyP4q5wZjF4k6VOr0r4rP";

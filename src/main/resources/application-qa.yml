@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://mysql_customer:3306/customer
-    username: k2k2
-    password: 1234
+    url: jdbc:mysql://customer-database.c5syiyqysxgo.sa-east-1.rds.amazonaws.com:3306/customer
+    username: agendahub_customer_admin
+    password: italok2k2
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
