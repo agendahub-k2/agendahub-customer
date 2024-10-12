@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://mysql_customer:3306/customer
+    url: jdbc:mysql://localhost:3306/customer
     username: k2k2
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
