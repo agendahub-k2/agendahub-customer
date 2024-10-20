@@ -34,6 +34,7 @@ public class CustomerService {
 
         try {
             setPasswordEncrypt(user);
+
             repository.save(UserMapper.toModel(user));
             logger.info("User persisted with ID: {}", user.getId());
         } catch (Exception e) {
@@ -43,6 +44,7 @@ public class CustomerService {
 
         return user;
     }
+
 
     public String login(String email, String password) {
         String token = "";

@@ -35,17 +35,17 @@ public class ProviderController {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/service")
-    public ResponseEntity<String> getServicesByProviderId(@PathVariable Long providerId) {
-
-        logger.info("Received getServicesByProviderId: {}", providerId);
-
-        providerService.getServicesByProviderId(providerId);
-
-        logger.info("getServicesByProviderId successfully {}", providerId);
-
-        return new ResponseEntity<>("", HttpStatus.OK);
-    }
+//    @PostMapping("/service")
+//    public ResponseEntity<String> getServicesByProviderId(@PathVariable Long providerId) {
+//
+//        logger.info("Received getServicesByProviderId: {}", providerId);
+//
+//        providerService.getServicesByProviderId(providerId);
+//
+//        logger.info("getServicesByProviderId successfully {}", providerId);
+//
+//        return new ResponseEntity<>("", HttpStatus.OK);
+//    }
 
 
 }

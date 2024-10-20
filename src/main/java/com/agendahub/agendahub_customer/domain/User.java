@@ -15,6 +15,7 @@ public class User {
     private UserType userType;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
+    private Provider provider;
 
     public enum UserType {
         SOLICITANTE,
