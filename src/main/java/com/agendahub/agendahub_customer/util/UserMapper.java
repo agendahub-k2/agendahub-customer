@@ -4,7 +4,6 @@ import com.agendahub.agendahub_customer.controller.dto.UserRequest;
 import com.agendahub.agendahub_customer.controller.dto.UserResponse;
 import com.agendahub.agendahub_customer.domain.User;
 import com.agendahub.agendahub_customer.repository.model.UserModel;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -43,7 +42,7 @@ public class UserMapper {
         model.setUserType(user.getUserType());
         model.setCreatedAt(user.getCreatedAt());
         model.setUpdateAt(user.getUpdateAt());
-        model.setTenantId(1);
+        model.setProviderId(1L);
         model.setPassword(user.getPassword());
         return model;
     }
