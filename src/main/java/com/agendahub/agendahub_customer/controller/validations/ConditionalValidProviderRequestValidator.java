@@ -7,14 +7,15 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ConditionalValidProviderRequestValidator implements ConstraintValidator<ConditionalValidProviderRequest, ProviderRequest> {
 
     @Override
-    public void initialize(ConditionalValidProviderRequest constraintAnnotation) {}
+    public void initialize(ConditionalValidProviderRequest constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(ProviderRequest providerRequest, ConstraintValidatorContext context) {
-        if (providerRequest == null) {
+        if (providerRequest == null || providerRequest.getId() != null) {
             return true; // Se for null, é válido
         }
-        
+
         return providerRequest.getNumCep() != null && !providerRequest.getNumCep().isEmpty() &&
                 providerRequest.getDescricaoRua() != null && !providerRequest.getDescricaoRua().isEmpty() &&
                 providerRequest.getNumero() != null && !providerRequest.getNumero().isEmpty() &&

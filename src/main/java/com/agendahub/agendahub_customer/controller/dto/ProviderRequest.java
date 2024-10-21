@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ProviderRequest {
+
+    private Long id;
+
     @NotBlank(message = "numCep cannot be empty or null")
     @Size(max = 100, message = "Cep Provider should not be longer than 100 characters")
     private String numCep;

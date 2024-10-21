@@ -33,7 +33,6 @@ public class UserRequest {
     private String userType;
 
     @ConditionalValidProviderRequest
-    @Valid
     private ProviderRequest providerRequest;
 }
 

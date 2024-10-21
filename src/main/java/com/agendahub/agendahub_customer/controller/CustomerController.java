@@ -5,6 +5,7 @@ import com.agendahub.agendahub_customer.controller.dto.LoginResponse;
 import com.agendahub.agendahub_customer.controller.dto.UserRequest;
 import com.agendahub.agendahub_customer.controller.dto.UserResponse;
 import com.agendahub.agendahub_customer.domain.User;
+import com.agendahub.agendahub_customer.domain.UserAuthenticated;
 import com.agendahub.agendahub_customer.exception.UnauthorizedException;
 import com.agendahub.agendahub_customer.service.CustomerService;
 import com.agendahub.agendahub_customer.util.Constants;
@@ -59,13 +60,9 @@ public class CustomerController {
 
         logger.info("Received request to login user: {}", loginRequest.getEmail());
 
-        String token = customerService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        UserAuthenticated userAuthenticated = customerService.login(loginRequest.getEmail(), loginRequest.getPassword());
 
-        if (token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Credenciais inválidas"));
-        }
-
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.ok(UserMapper.toLoginResponse(userAuthenticated));
     }
 
     @GetMapping("/authenticate")

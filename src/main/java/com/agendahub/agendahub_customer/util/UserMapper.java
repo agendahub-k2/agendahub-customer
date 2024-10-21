@@ -1,15 +1,16 @@
 package com.agendahub.agendahub_customer.util;
 
+import com.agendahub.agendahub_customer.controller.dto.LoginResponse;
 import com.agendahub.agendahub_customer.controller.dto.UserRequest;
 import com.agendahub.agendahub_customer.controller.dto.UserResponse;
 import com.agendahub.agendahub_customer.domain.Provider;
 import com.agendahub.agendahub_customer.domain.User;
+import com.agendahub.agendahub_customer.domain.UserAuthenticated;
 import com.agendahub.agendahub_customer.repository.model.ProviderModel;
 import com.agendahub.agendahub_customer.repository.model.UserModel;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 
 public class UserMapper {
@@ -24,15 +25,8 @@ public class UserMapper {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdateAt(LocalDateTime.now());
 
-        if (Objects.equals(userRequest.getUserType(), User.UserType.PROVEDOR.name())) {
-            Provider provider = new Provider();
-            provider.setId(null);
-            provider.setTypeProvider(userRequest.getProviderRequest().getTypeProvider());
-            provider.setNumero(userRequest.getProviderRequest().getNumero());
-            provider.setDescricaoRua(userRequest.getProviderRequest().getDescricaoRua());
-            provider.setNumCep(userRequest.getProviderRequest().getNumCep());
-            user.setProvider(provider);
-        }
+        Provider provider = getProvider(userRequest);
+        user.setProvider(provider);
 
         return user;
     }
@@ -46,6 +40,12 @@ public class UserMapper {
         userResponse.setCreatedAt(user.getCreatedAt().toString());
         userResponse.setUpdateAt(user.getCreatedAt().toString());
         return userResponse;
+    }
+
+    public static LoginResponse toLoginResponse(UserAuthenticated user) {
+        LoginResponse loginResponse = (LoginResponse) toUserResponse(user);
+        loginResponse.setToken(user.getToken());
+        return loginResponse;
     }
 
     public static UserModel toModel(User user) {
@@ -62,6 +62,32 @@ public class UserMapper {
         return model;
     }
 
+    public static User toUser(UserModel model) {
+        User user = new User();
+        user.setId(model.getId());
+        user.setName(model.getName());
+        user.setEmail(model.getEmail());
+        user.setUserType(model.getUserType());
+        user.setCreatedAt(model.getCreatedAt());
+        user.setUpdateAt(model.getUpdateAt());
+        user.setPassword(model.getPassword());
+        return user;
+    }
+
+    private static Provider getProvider(UserRequest userRequest) {
+        Provider provider = new Provider();
+        if (Objects.equals(userRequest.getUserType(), User.UserType.PROVEDOR.name())) {
+            provider.setId(null);
+            provider.setTypeProvider(userRequest.getProviderRequest().getTypeProvider());
+            provider.setNumero(userRequest.getProviderRequest().getNumero());
+            provider.setDescricaoRua(userRequest.getProviderRequest().getDescricaoRua());
+            provider.setNumCep(userRequest.getProviderRequest().getNumCep());
+        } else {
+            provider.setId(userRequest.getProviderRequest().getId());
+        }
+        return provider;
+    }
+
     private static ProviderModel getProviderModel(User user) {
         ProviderModel provider = new ProviderModel();
         if (user.getUserType() == User.UserType.PROVEDOR) {
@@ -75,16 +101,21 @@ public class UserMapper {
         return provider;
     }
 
-    public static User toUser(UserModel model) {
-        User user = new User();
-        user.setId(model.getId());
-        user.setName(model.getName());
-        user.setEmail(model.getEmail());
-        user.setUserType(model.getUserType());
-        user.setCreatedAt(model.getCreatedAt());
-        user.setUpdateAt(model.getUpdateAt());
-        user.setPassword(model.getPassword());
-        return user;
+    public static UserAuthenticated toUserAuthenticated(String token, UserModel userModel) {
+        UserAuthenticated userAuthenticated = new UserAuthenticated();
+        userAuthenticated.setToken(token);
+        userAuthenticated.setId(userModel.getId());
+        userAuthenticated.setUserType(userModel.getUserType());
+        userAuthenticated.setName(userModel.getName());
+        userAuthenticated.setEmail(userModel.getEmail());
+
+        userAuthenticated.setCreatedAt(userModel.getCreatedAt());
+        userAuthenticated.setUpdateAt(userModel.getUpdateAt());
+
+//        userAuthenticated.setProvider();
+
+
+        return userAuthenticated;
     }
 }
 
