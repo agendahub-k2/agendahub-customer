@@ -16,7 +16,7 @@ public class UserMapper {
 
     public static User toUser(UserRequest userRequest) {
         User user = new User();
-        user.setId(UUID.randomUUID().toString());
+        user.setId(null);
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());
         user.setPassword(userRequest.getPassword());
@@ -24,14 +24,13 @@ public class UserMapper {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdateAt(LocalDateTime.now());
 
-        if(Objects.equals(userRequest.getUserType(), User.UserType.PROVEDOR.name())){
+        if (Objects.equals(userRequest.getUserType(), User.UserType.PROVEDOR.name())) {
             Provider provider = new Provider();
-            provider.setNameProvider(user.getProvider().getNameProvider());
             provider.setId(null);
-            provider.setTypeProvider(user.getProvider().getTypeProvider());
-            provider.setNumero(user.getProvider().getNumero());
-            provider.setDescricaoRua(user.getProvider().getDescricaoRua());
-            provider.setNumCep(user.getProvider().getNumCep());
+            provider.setTypeProvider(userRequest.getProviderRequest().getTypeProvider());
+            provider.setNumero(userRequest.getProviderRequest().getNumero());
+            provider.setDescricaoRua(userRequest.getProviderRequest().getDescricaoRua());
+            provider.setNumCep(userRequest.getProviderRequest().getNumCep());
             user.setProvider(provider);
         }
 
@@ -49,7 +48,7 @@ public class UserMapper {
         return userResponse;
     }
 
-    public static UserModel toModel(User user){
+    public static UserModel toModel(User user) {
         UserModel model = new UserModel();
         model.setId(user.getId());
         model.setName(user.getName());
@@ -57,21 +56,26 @@ public class UserMapper {
         model.setUserType(user.getUserType());
         model.setCreatedAt(user.getCreatedAt());
         model.setUpdateAt(user.getUpdateAt());
-
         model.setPassword(user.getPassword());
-
-        if(user.getUserType()== User.UserType.PROVEDOR) {
-            ProviderModel provider = new ProviderModel();
-
-            model.setProviderId(null);
-        }else{
-            model.setProviderId(1L);
-        }
+        model.setProvider(getProviderModel(user));
 
         return model;
     }
 
-    public static User toUser(UserModel model){
+    private static ProviderModel getProviderModel(User user) {
+        ProviderModel provider = new ProviderModel();
+        if (user.getUserType() == User.UserType.PROVEDOR) {
+            provider.setTypeProvider(user.getProvider().getTypeProvider());
+            provider.setNumero(user.getProvider().getNumero());
+            provider.setDescricaoRua(user.getProvider().getDescricaoRua());
+            provider.setNumCep(user.getProvider().getNumCep());
+        } else {
+            provider.setId(user.getProvider().getId());
+        }
+        return provider;
+    }
+
+    public static User toUser(UserModel model) {
         User user = new User();
         user.setId(model.getId());
         user.setName(model.getName());

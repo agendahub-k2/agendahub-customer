@@ -15,8 +15,7 @@ public class ConditionalValidProviderRequestValidator implements ConstraintValid
             return true; // Se for null, é válido
         }
         
-        return providerRequest.getNameProvider() != null && !providerRequest.getNameProvider().isEmpty() &&
-                providerRequest.getNumCep() != null && !providerRequest.getNumCep().isEmpty() &&
+        return providerRequest.getNumCep() != null && !providerRequest.getNumCep().isEmpty() &&
                 providerRequest.getDescricaoRua() != null && !providerRequest.getDescricaoRua().isEmpty() &&
                 providerRequest.getNumero() != null && !providerRequest.getNumero().isEmpty() &&
                 providerRequest.getTypeProvider() != null && !providerRequest.getTypeProvider().isEmpty();

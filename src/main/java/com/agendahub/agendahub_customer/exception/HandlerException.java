@@ -58,6 +58,15 @@ public class HandlerException {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> userNotFoundException(UserNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), null);
+        logger.error("Error {}{} ", HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), ex);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<String> unauthorizedException(UnauthorizedException ex) {
@@ -77,12 +86,12 @@ public class HandlerException {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
 
-        String errorMessage = "Database integrity violation occurred";
+        String errorMessage = "Erro ao salvar no banco de dados";
 
         Throwable rootCause = ex.getRootCause();
         while (rootCause != null) {
             if (rootCause instanceof SQLIntegrityConstraintViolationException) {
-                errorMessage = rootCause.getMessage();
+                errorMessage = "Email já cadastrado.";
                 break;
             }
             rootCause = rootCause.getCause();

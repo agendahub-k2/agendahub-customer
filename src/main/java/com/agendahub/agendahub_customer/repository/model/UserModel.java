@@ -16,11 +16,13 @@ import java.time.LocalDateTime;
 public class UserModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private String id;
+    private Long id;
 
-    @Column(name = "provider_id", nullable = false)
-    private Long providerId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "provider_id", referencedColumnName = "id", nullable = true)
+    private ProviderModel provider;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;

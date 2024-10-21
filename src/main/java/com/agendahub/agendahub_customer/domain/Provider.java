@@ -1,7 +1,5 @@
 package com.agendahub.agendahub_customer.domain;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +8,6 @@ import lombok.NoArgsConstructor;
 public class Provider {
 
     private Long id;
-
-    private String nameProvider;
 
     private String numCep;
 

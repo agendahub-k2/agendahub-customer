@@ -56,6 +56,7 @@ public class CustomerService {
                 boolean isValid = passwordService.checkPassword(password, userModel.get().getPassword());
                 if (isValid) {
                     token = JwtUtil.generateToken(email);
+
                 }
             }
         } catch (Exception e) {

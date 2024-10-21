@@ -17,9 +17,6 @@ public class ProviderModel {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name_provider", nullable = false, length = 100)
-    private String nameProvider;
-
     @Column(name = "num_cep", nullable = false, length = 100)
     private String numCep;
 
@@ -31,5 +28,5 @@ public class ProviderModel {
 
     @Column(name = "type_provider", nullable = false, length = 100)
     private String typeProvider;
-
 }
+
