@@ -4,9 +4,12 @@ import com.agendahub.agendahub_customer.controller.dto.LoginResponse;
 import com.agendahub.agendahub_customer.domain.User;
 //import com.agendahub.agendahub_customer.repository.UserRepository;
 import com.agendahub.agendahub_customer.domain.UserAuthenticated;
+import com.agendahub.agendahub_customer.exception.ProviderNotFoundException;
 import com.agendahub.agendahub_customer.exception.UnauthorizedException;
 import com.agendahub.agendahub_customer.exception.UserNotFoundException;
+import com.agendahub.agendahub_customer.repository.ProviderRepository;
 import com.agendahub.agendahub_customer.repository.UserRepository;
+import com.agendahub.agendahub_customer.repository.model.ProviderModel;
 import com.agendahub.agendahub_customer.repository.model.UserModel;
 import com.agendahub.agendahub_customer.util.Constants;
 import com.agendahub.agendahub_customer.util.JwtUtil;
@@ -24,12 +27,14 @@ import java.util.Optional;
 public class CustomerService {
 
     private final UserRepository repository;
+    private final ProviderRepository providerRepository;
     private final PasswordService passwordService;
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
-    public CustomerService(UserRepository repository, PasswordService passwordService) {
+    public CustomerService(UserRepository repository, PasswordService passwordService, ProviderRepository providerRepository) {
         this.repository = repository;
         this.passwordService = passwordService;
+        this.providerRepository = providerRepository;
     }
 
     public User createUser(User user) {
@@ -37,7 +42,10 @@ public class CustomerService {
         try {
             setPasswordEncrypt(user);
 
-            repository.save(UserMapper.toModel(user));
+            UserModel model = UserMapper.toModel(user);
+            setProvider(model, user.getProvider().getId());
+
+            repository.save(model);
             logger.info("User persisted with ID: {}", user.getId());
         } catch (Exception e) {
             logger.error("Failed to save user with ID: {}. Exception: {}", user.getId(), e.getMessage(), e);
@@ -46,7 +54,6 @@ public class CustomerService {
 
         return user;
     }
-
 
     public UserAuthenticated login(String email, String password) {
         UserAuthenticated userAuthenticated = new UserAuthenticated();
@@ -100,5 +107,12 @@ public class CustomerService {
         user.setPassword(passwordService.hashPassword(user.getPassword()));
     }
 
+    private void setProvider(UserModel model, Long id) {
+        if (model.getUserType() == User.UserType.SOLICITANTE) {
+            ProviderModel providerModel = providerRepository.findById(id).orElseThrow(() ->
+                    new ProviderNotFoundException(Constants.PROVIDER_NOT_FOUND));
+            model.setProvider(providerModel);
+        }
+    }
 
 }

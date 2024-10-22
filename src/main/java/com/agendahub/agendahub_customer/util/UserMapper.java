@@ -95,8 +95,6 @@ public class UserMapper {
             provider.setNumero(user.getProvider().getNumero());
             provider.setDescricaoRua(user.getProvider().getDescricaoRua());
             provider.setNumCep(user.getProvider().getNumCep());
-        } else {
-            provider.setId(user.getProvider().getId());
         }
         return provider;
     }
@@ -112,8 +110,12 @@ public class UserMapper {
         userAuthenticated.setCreatedAt(userModel.getCreatedAt());
         userAuthenticated.setUpdateAt(userModel.getUpdateAt());
 
-//        userAuthenticated.setProvider();
+        Provider provider = new Provider();
+        provider.setId(userModel.getProvider().getId());
+        provider.setNumero(userModel.getProvider().getNumero());
 
+
+        userAuthenticated.setProvider(provider);
 
         return userAuthenticated;
     }

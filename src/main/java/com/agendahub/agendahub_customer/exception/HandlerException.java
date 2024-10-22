@@ -1,9 +1,7 @@
 package com.agendahub.agendahub_customer.exception;
 
-import com.agendahub.agendahub_customer.controller.CustomerController;
+
 import com.agendahub.agendahub_customer.controller.dto.ErrorResponse;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -54,7 +52,7 @@ public class HandlerException {
     public ResponseEntity<ErrorResponse> exception(Exception ex) {
         ErrorResponse.ValidationError error = new ErrorResponse.ValidationError("", "");
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), List.of(error));
-        logger.error("Error {}{} ", HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex);
+        logger.error("Error {} {} ", HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -62,10 +60,17 @@ public class HandlerException {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> userNotFoundException(UserNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), null);
-        logger.error("Error {}{} ", HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), ex);
+        logger.error("Error {} {} ", HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), ex);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ProviderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> providerNotFoundException(ProviderNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), null);
+        logger.error("Error {} {} ", HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), ex);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -73,14 +78,6 @@ public class HandlerException {
         logger.info("status code{} {}", HttpStatus.UNAUTHORIZED, ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
-
-    @ExceptionHandler(TokenExpiredException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<String> tokenExpiredException(TokenExpiredException ex) {
-        logger.info("status code{}{}", HttpStatus.UNAUTHORIZED, ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

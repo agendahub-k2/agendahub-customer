@@ -20,8 +20,8 @@ public class UserModel {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "provider_id", referencedColumnName = "id", nullable = true)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "provider_id", referencedColumnName = "id")
     private ProviderModel provider;
 
     @Column(name = "name", nullable = false, length = 100)
@@ -30,7 +30,7 @@ public class UserModel {
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 255)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
