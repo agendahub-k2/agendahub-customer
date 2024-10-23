@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProviderResponse {
 
+    private Long id;
+
     private String numCep;
 
     private String descricaoRua;

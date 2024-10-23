@@ -1,6 +1,8 @@
 package com.agendahub.agendahub_customer.util;
 
+import com.agendahub.agendahub_customer.controller.dto.ProviderResponse;
 import com.agendahub.agendahub_customer.controller.dto.ServiceRequest;
+import com.agendahub.agendahub_customer.domain.Provider;
 import com.agendahub.agendahub_customer.domain.ServiceProvedor;
 import com.agendahub.agendahub_customer.domain.User;
 import com.agendahub.agendahub_customer.repository.model.ServiceProviderModel;
@@ -26,5 +28,16 @@ public class ProviderMapper {
         model.setNameService(serviceProvedor.getNameService());
 
         return model;
+    }
+
+    public static ProviderResponse toResponse(Provider provider){
+        ProviderResponse providerResponse = new ProviderResponse();
+        providerResponse.setTypeProvider(provider.getTypeProvider());
+        providerResponse.setNumero(provider.getNumero());
+        providerResponse.setDescricaoRua(provider.getDescricaoRua());
+        providerResponse.setNumCep(provider.getNumCep());
+        providerResponse.setId(provider.getId());
+
+        return providerResponse;
     }
 }

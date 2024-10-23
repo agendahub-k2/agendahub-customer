@@ -12,6 +12,7 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String phone;
     private UserType userType;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;

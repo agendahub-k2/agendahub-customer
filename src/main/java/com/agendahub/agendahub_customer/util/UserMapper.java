@@ -24,6 +24,7 @@ public class UserMapper {
         user.setUserType(User.UserType.valueOf(userRequest.getUserType().toUpperCase()));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdateAt(LocalDateTime.now());
+        user.setPhone(userRequest.getPhone());
 
         Provider provider = getProvider(userRequest);
         user.setProvider(provider);
@@ -39,12 +40,21 @@ public class UserMapper {
         userResponse.setUserType(user.getUserType().name());
         userResponse.setCreatedAt(user.getCreatedAt().toString());
         userResponse.setUpdateAt(user.getCreatedAt().toString());
+        userResponse.setPhone(user.getPhone());
         return userResponse;
     }
 
     public static LoginResponse toLoginResponse(UserAuthenticated user) {
-        LoginResponse loginResponse = (LoginResponse) toUserResponse(user);
+        LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(user.getToken());
+        loginResponse.setId(user.getId());
+        loginResponse.setName(user.getName());
+        loginResponse.setEmail(user.getEmail());
+        loginResponse.setUserType(user.getUserType().name());
+        loginResponse.setCreatedAt(user.getCreatedAt().toString());
+        loginResponse.setUpdateAt(user.getUpdateAt().toString());
+        loginResponse.setPhone(user.getPhone());
+        loginResponse.setProviderResponse(ProviderMapper.toResponse(user.getProvider()));
         return loginResponse;
     }
 
@@ -53,6 +63,7 @@ public class UserMapper {
         model.setId(user.getId());
         model.setName(user.getName());
         model.setEmail(user.getEmail());
+        model.setPhone(user.getPhone());
         model.setUserType(user.getUserType());
         model.setCreatedAt(user.getCreatedAt());
         model.setUpdateAt(user.getUpdateAt());
@@ -71,6 +82,7 @@ public class UserMapper {
         user.setCreatedAt(model.getCreatedAt());
         user.setUpdateAt(model.getUpdateAt());
         user.setPassword(model.getPassword());
+        user.setPhone(model.getPhone());
         return user;
     }
 
@@ -106,13 +118,16 @@ public class UserMapper {
         userAuthenticated.setUserType(userModel.getUserType());
         userAuthenticated.setName(userModel.getName());
         userAuthenticated.setEmail(userModel.getEmail());
-
+        userAuthenticated.setPhone(userModel.getPhone());
         userAuthenticated.setCreatedAt(userModel.getCreatedAt());
         userAuthenticated.setUpdateAt(userModel.getUpdateAt());
 
         Provider provider = new Provider();
         provider.setId(userModel.getProvider().getId());
         provider.setNumero(userModel.getProvider().getNumero());
+        provider.setNumCep(userModel.getProvider().getNumCep());
+        provider.setTypeProvider(userModel.getProvider().getTypeProvider());
+        provider.setDescricaoRua(userModel.getProvider().getDescricaoRua());
 
 
         userAuthenticated.setProvider(provider);
