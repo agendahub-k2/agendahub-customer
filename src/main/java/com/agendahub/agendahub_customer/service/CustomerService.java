@@ -2,7 +2,6 @@ package com.agendahub.agendahub_customer.service;
 
 import com.agendahub.agendahub_customer.controller.dto.LoginResponse;
 import com.agendahub.agendahub_customer.domain.User;
-//import com.agendahub.agendahub_customer.repository.UserRepository;
 import com.agendahub.agendahub_customer.domain.UserAuthenticated;
 import com.agendahub.agendahub_customer.exception.ProviderNotFoundException;
 import com.agendahub.agendahub_customer.exception.UnauthorizedException;

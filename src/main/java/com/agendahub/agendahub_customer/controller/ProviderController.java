@@ -32,7 +32,7 @@ public class ProviderController {
 
         logger.info("Service created successfully");
 
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 //    @PostMapping("/service")

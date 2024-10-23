@@ -1,7 +1,6 @@
 package com.agendahub.agendahub_customer.controller.dto;
 
 import com.agendahub.agendahub_customer.controller.validations.ConditionalValidProviderRequest;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

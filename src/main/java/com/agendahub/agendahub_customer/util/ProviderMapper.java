@@ -4,9 +4,7 @@ import com.agendahub.agendahub_customer.controller.dto.ProviderResponse;
 import com.agendahub.agendahub_customer.controller.dto.ServiceRequest;
 import com.agendahub.agendahub_customer.domain.Provider;
 import com.agendahub.agendahub_customer.domain.ServiceProvedor;
-import com.agendahub.agendahub_customer.domain.User;
 import com.agendahub.agendahub_customer.repository.model.ServiceProviderModel;
-import com.agendahub.agendahub_customer.repository.model.UserModel;
 
 public class ProviderMapper {
 
