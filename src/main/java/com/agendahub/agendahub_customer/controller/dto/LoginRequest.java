@@ -13,7 +13,6 @@ import lombok.ToString;
 public class LoginRequest {
 
     @NotBlank(message = "Email cannot be empty or null")
-    @Email(message = "Email should be valid")
     @Size(max = 100, message = "Email should not be longer than 100 characters")
     private String email;
 

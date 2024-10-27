@@ -1,6 +1,7 @@
 package com.agendahub.agendahub_customer.service;
 
 import com.agendahub.agendahub_customer.repository.ServiceProviderRepository;
+import com.agendahub.agendahub_customer.repository.model.ServiceProviderModel;
 import com.agendahub.agendahub_customer.util.ProviderMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,7 @@ public class ProviderService {
         serviceProviderRepository.save(ProviderMapper.toModel(serviceProvedor));
     }
 
-    public List<ServiceProvedor> getServicesByProviderId(Long providerId) {
-
-        return null;
+    public List<ServiceProviderModel> getServicesByProviderId(Long providerId) {
+       return serviceProviderRepository.findByProviderId(providerId);
     }
 }

@@ -1,8 +1,8 @@
 package com.agendahub.agendahub_customer.service;
 
-import com.agendahub.agendahub_customer.controller.dto.LoginResponse;
 import com.agendahub.agendahub_customer.domain.User;
 import com.agendahub.agendahub_customer.domain.UserAuthenticated;
+import com.agendahub.agendahub_customer.exception.EmailOrPasswordException;
 import com.agendahub.agendahub_customer.exception.ProviderNotFoundException;
 import com.agendahub.agendahub_customer.exception.UnauthorizedException;
 import com.agendahub.agendahub_customer.exception.UserNotFoundException;
@@ -55,21 +55,19 @@ public class CustomerService {
     }
 
     public UserAuthenticated login(String email, String password) {
-        UserAuthenticated userAuthenticated = new UserAuthenticated();
-        try {
+        UserAuthenticated userAuthenticated;
 
-            Optional<UserModel> userModel = repository.findByEmail(email);
+        Optional<UserModel> userModel = repository.findByEmail(email);
 
-            if (userModel.isPresent()) {
-                boolean isValid = passwordService.checkPassword(password, userModel.get().getPassword());
-                if (isValid) {
-                    userAuthenticated = UserMapper.toUserAuthenticated(JwtUtil.generateToken(email), userModel.get());
-                } else {
-                    new LoginResponse("Credenciais inválidas");
-                }
+        if (userModel.isPresent()) {
+            boolean isValid = passwordService.checkPassword(password, userModel.get().getPassword());
+            if (isValid) {
+                userAuthenticated = UserMapper.toUserAuthenticated(JwtUtil.generateToken(email), userModel.get());
+            } else {
+                throw new EmailOrPasswordException();
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } else {
+            throw new EmailOrPasswordException();
         }
         return userAuthenticated;
     }
