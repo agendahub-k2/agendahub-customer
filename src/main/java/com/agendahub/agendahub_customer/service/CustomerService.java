@@ -3,10 +3,8 @@ package com.agendahub.agendahub_customer.service;
 import com.agendahub.agendahub_customer.domain.User;
 import com.agendahub.agendahub_customer.domain.UserAuthenticated;
 import com.agendahub.agendahub_customer.exception.EmailOrPasswordException;
-import com.agendahub.agendahub_customer.exception.ProviderNotFoundException;
 import com.agendahub.agendahub_customer.exception.UnauthorizedException;
 import com.agendahub.agendahub_customer.exception.UserNotFoundException;
-import com.agendahub.agendahub_customer.repository.ProviderRepository;
 import com.agendahub.agendahub_customer.repository.UserRepository;
 import com.agendahub.agendahub_customer.repository.model.ProviderModel;
 import com.agendahub.agendahub_customer.repository.model.UserModel;
@@ -26,14 +24,14 @@ import java.util.Optional;
 public class CustomerService {
 
     private final UserRepository repository;
-    private final ProviderRepository providerRepository;
     private final PasswordService passwordService;
+    private final ProviderService providerService;
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
-    public CustomerService(UserRepository repository, PasswordService passwordService, ProviderRepository providerRepository) {
+    public CustomerService(UserRepository repository, PasswordService passwordService, ProviderService providerService) {
         this.repository = repository;
         this.passwordService = passwordService;
-        this.providerRepository = providerRepository;
+        this.providerService = providerService;
     }
 
     public User createUser(User user) {
@@ -106,8 +104,7 @@ public class CustomerService {
 
     private void setProvider(UserModel model, Long id) {
         if (model.getUserType() == User.UserType.SOLICITANTE) {
-            ProviderModel providerModel = providerRepository.findById(id).orElseThrow(() ->
-                    new ProviderNotFoundException(Constants.PROVIDER_NOT_FOUND));
+            ProviderModel providerModel = providerService.getProvider(id);
             model.setProvider(providerModel);
         }
     }

@@ -8,12 +8,13 @@ import com.agendahub.agendahub_customer.repository.model.ServiceProviderModel;
 
 public class ProviderMapper {
 
-    public static ServiceProvedor toDomain(ServiceRequest request, Long id) {
+    public static ServiceProvedor toDomain(ServiceRequest request, Long providerId, Long serviceId) {
         ServiceProvedor provider = new ServiceProvedor();
-        provider.setProviderId(id);
+        provider.setProviderId(providerId);
         provider.setDuration(request.getDuration());
         provider.setNameService(request.getNameService());
         provider.setPrice(request.getPrice());
+        provider.setId(serviceId);
 
         return provider;
     }

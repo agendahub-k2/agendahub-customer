@@ -1,6 +1,5 @@
 package com.agendahub.agendahub_customer.repository.model;
 
-import com.agendahub.agendahub_customer.service.listener.ServiceProviderAuditListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +9,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "services")
-@EntityListeners(ServiceProviderAuditListener.class)
+@Table(name = "services_history")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ServiceProviderModel {
+public class ServiceProviderHistoryModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +22,9 @@ public class ServiceProviderModel {
 
     @Column(name = "provider_id", nullable = false)
     private Long providerId;
+
+    @Column(name = "service_id", nullable = false)
+    private Long serviceId;
 
     @Column(name = "name_service", nullable = false)
     private String nameService;
@@ -37,18 +38,13 @@ public class ServiceProviderModel {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "update_at", nullable = false)
-    private LocalDateTime updateAt;
+    @Column(name = "operation", nullable = false, updatable = false)
+    private String operation;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updateAt = LocalDateTime.now();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updateAt = LocalDateTime.now();
-    }
 
 }

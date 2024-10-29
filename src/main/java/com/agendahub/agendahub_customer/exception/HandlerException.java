@@ -50,8 +50,7 @@ public class HandlerException {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> exception(Exception ex) {
-        ErrorResponse.ValidationError error = new ErrorResponse.ValidationError("", "");
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), List.of(error));
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), null);
         logger.error("Error {} {} ", HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
